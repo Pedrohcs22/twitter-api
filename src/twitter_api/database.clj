@@ -4,13 +4,23 @@
   (:import [com.mongodb MongoOptions ServerAddress]
              org.bson.types.ObjectId))
 
-(let [conn (mg/connect)
-      db   (mg/get-db conn "twitter_api")])
+(def conn (atom (mg/connect)))
+(def db (atom (mg/get-db @conn "twitter_api")))
 
-(defn retrieveAllTweets [] ["Hello mundo", "hello city"])
+(defn mapToObject [result]
+  {:_id (str (get result :_id)),
+   :owner (str (get result :owner)),
+   :content (str (get result :content))})
 
-(defn createTweet [title description] ())
+(defn retrieveTweetsForUser [userId]
+    (mc/find-maps @db "tweets" {:owner userId}))
 
-(defn deleteTweet [id] ())
+(defn createTweet [userId content]
+    (mc/insert-and-return @db "tweets" {:owner userId :content content}))
 
-(defn retrieveTweet [id] ())
+(defn deleteTweet [tweetId]
+    (mc/remove-by-id @db "tweets" tweetId))
+
+(defn retrieveTweet [objectId]
+  (def result (mc/find-one-as-map @db "tweets" { :_id (ObjectId. objectId) }))
+  (mapToObject result))
