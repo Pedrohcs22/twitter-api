@@ -8,19 +8,21 @@
 (def db (atom (mg/get-db @conn "twitter_api")))
 
 (defn mapToObject [result]
-  {:_id (str (get result :_id)),
-   :owner (str (get result :owner)),
-   :content (str (get result :content))})
+  (assoc result :_id (str (:_id result))))
 
-(defn retrieveTweetsForUser [userId]
-    (mc/find-maps @db "tweets" {:owner userId}))
+(defn retrieve-tweets-for-user [userId]
+  (def result (mc/find-maps @db "tweets" {:owner userId}))
+  (apply hash-map result)
+  (map
+   (fn [tweet] (mapToObject tweet))
+   result))
 
-(defn createTweet [userId content]
+(defn create-tweet [userId content]
     (mc/insert-and-return @db "tweets" {:owner userId :content content}))
 
-(defn deleteTweet [tweetId]
+(defn delete-tweet [tweetId]
     (mc/remove-by-id @db "tweets" tweetId))
 
-(defn retrieveTweet [objectId]
+(defn retrieve-tweet [objectId]
   (def result (mc/find-one-as-map @db "tweets" { :_id (ObjectId. objectId) }))
   (mapToObject result))
