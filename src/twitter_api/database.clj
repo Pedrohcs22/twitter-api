@@ -1,6 +1,7 @@
 (ns twitter-api.database
   (:require [monger.core :as mg]
-            [monger.collection :as mc])
+            [monger.collection :as mc]
+            [buddy.hashers :as hashers])
   (:import [com.mongodb MongoOptions ServerAddress]
              org.bson.types.ObjectId))
 
@@ -9,6 +10,12 @@
 
 (defn mapToObject [result]
   (assoc result :_id (str (:_id result))))
+
+(defn create-response [status body]
+  {:status status
+   :headers {}
+   :content-type "application/json; charset=UTF-8"
+   :body body})
 
 (defn retrieve-tweets-for-user [userId]
   (def result (mc/find-maps @db "tweets" {:owner userId}))
@@ -26,3 +33,15 @@
 (defn retrieve-tweet [objectId]
   (def result (mc/find-one-as-map @db "tweets" { :_id (ObjectId. objectId) }))
   (mapToObject result))
+
+(defn like-tweet [objectId])
+
+;; user operations
+(defn create-user [userName userPassword]
+  (def encriptedPassword (hashers/derive userPassword))
+  (mc/insert @db "users" {:name userName :password encriptedPassword})
+  true)
+
+;; login user
+(defn login [userName userPassword]
+  ) ;; (hashers/check "secretpassword" "bcrypt+sha512$4i9sd34m...")
