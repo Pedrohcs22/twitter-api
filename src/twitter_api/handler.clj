@@ -24,12 +24,12 @@
 
   (PUT "/rest/v1/user/:followedUserId/follow" req
        (let [bearer (get-in req [:headers "authorization"])
-             followedUserId (get-in req [:route-params :id])]
+             followedUserId (get-in req [:route-params :followedUserId])]
          (follow-user bearer followedUserId)))
 
   (PUT "/rest/v1/user/:bloquedUserId/block" req
        (let [bearerToken (get-in req [:headers "authorization"])
-             bloquedUserId (get-in req [:route-params :id])]
+             bloquedUserId (get-in req [:route-params :bloquedUserId])]
          (block-user bearerToken bloquedUserId))))
 
 (defroutes login-routes
@@ -52,10 +52,7 @@
   (PUT "/rest/v1/tweet/:id/like" req
        (let [bearer (get-in req [:headers "authorization"])
              id (get-in req [:route-params :id])]
-         (like-tweet bearer id)))
-
-  (DELETE "/rest/v1/tweet/:id" [id]
-          (response (delete-tweet (Integer/parseInt id)))))
+         (like-tweet bearer id))))
 
 (defroutes app-routes
   user-routes

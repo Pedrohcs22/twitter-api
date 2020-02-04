@@ -18,6 +18,9 @@ A twitter clone written in clojure.
     - The collection can be found at the resources folder, open the Collection on Postman and execute all of them sequentially in order to have the test entities created.
     - The backend must be running.
 
+## API Documentation 
+   https://app.swaggerhub.com/apis-docs/pedro79/twitter-api-clone/1
+   
 ## Running
 
 To start a web server for the application, run:

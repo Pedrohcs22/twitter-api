@@ -1,0 +1,778 @@
+{
+	"info": {
+		"_postman_id": "c00e5549-228b-4cb7-8796-79334f77c2ef",
+		"name": "twitter-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Clear Database",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63b7ecc1-c2a5-4db3-a01c-889335848ad3",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/database/clear",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"database",
+						"clear"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea1c7f73-f9c5-4321-b932-7b5e0b4a5ca0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "83f629f0-a464-48f3-b8cf-03af30727fb7",
+						"exec": [
+							"pm.collectionVariables.set(\"userId\", responseBody);",
+							"",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fails to create duplicated user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea1c7f73-f9c5-4321-b932-7b5e0b4a5ca0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "83f629f0-a464-48f3-b8cf-03af30727fb7",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Second User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea1c7f73-f9c5-4321-b932-7b5e0b4a5ca0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "83f629f0-a464-48f3-b8cf-03af30727fb7",
+						"exec": [
+							"pm.collectionVariables.set(\"userId2\", responseBody);",
+							"",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro2\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Third User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ea1c7f73-f9c5-4321-b932-7b5e0b4a5ca0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "83f629f0-a464-48f3-b8cf-03af30727fb7",
+						"exec": [
+							"pm.collectionVariables.set(\"userId3\", responseBody);",
+							"",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro3\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7f1060fd-9f41-457a-9acc-00df1dec9aad",
+						"exec": [
+							"pm.collectionVariables.set(\"jwt\", responseBody);",
+							"",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"Pedro\", \"password\": \"12345\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Tweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cf7fc9c1-f381-485d-8841-95fa5ae3ba09",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.collectionVariables.set(\"tweetId\", jsonData._id);",
+							"",
+							"pm.test(\"Status test\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\": \"This is a test tweet\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/tweet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"tweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Second Tweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3570c8e2-389a-4e84-b156-bdafe7a9c752",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\": \"This is a second test tweet\"}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/tweet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"tweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Tweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8d25cb3e-98d6-4f71-a284-9f1d5d657574",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/tweet/{{tweetId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"tweet",
+						"{{tweetId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Retrieve Tweets for User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af3cccc4-b40d-4256-b4d0-822bea6b4677",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user/{{userId}}/tweet",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user",
+						"{{userId}}",
+						"tweet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Like Tweet",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9007cf51-6f69-4bb3-964a-8de826014a82",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/tweet/{{tweetId}}/like",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"tweet",
+						"{{tweetId}}",
+						"like"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Follow User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e1aed06-e504-4e80-b760-0c836437aef9",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user/{{userId2}}/follow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user",
+						"{{userId2}}",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Block User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a62994ea-8bf9-4faf-a917-7e8f52659d61",
+						"exec": [
+							"pm.test(\"Status test\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "",
+						"type": "text",
+						"value": ""
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/rest/v1/user/{{userId3}}/block",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rest",
+						"v1",
+						"user",
+						"{{userId3}}",
+						"block"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "9fbd8858-7480-4725-b448-9f10bb52c496",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c6efe3cb-f500-47aa-86dc-0bee483c484d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "125064ee-119b-4e7c-8f49-1365725eda89",
+			"key": "jwt",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "39b2bd0a-4773-47dc-8f58-d2cbd268974d",
+			"key": "tweetId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "d99ef7d8-44c7-46bd-b9f0-e145b13e25c4",
+			"key": "userId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "ce36303e-2744-4a97-9b7b-810982a7e48b",
+			"key": "userId2",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"id": "44936260-c887-4726-ab0a-e925ae7e8bc6",
+			"key": "userId3",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
