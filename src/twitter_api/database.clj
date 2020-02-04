@@ -2,7 +2,8 @@
   (:require [monger.core :as mg]
             [monger.collection :as mc]
             [buddy.hashers :as hashers]
-            [twitter-api.auth :refer :all])
+            [twitter-api.auth :refer :all]
+            [monger.operators :refer :all])
   (:import [com.mongodb MongoOptions ServerAddress]
              org.bson.types.ObjectId))
 
@@ -17,6 +18,15 @@
   {:status status
    :content-type "application/json; charset=UTF-8"
    :body body})
+
+(defn insert-like [tweetId userId]
+  (mc/update @db "tweets" { :_id (ObjectId. tweetId) } {$push {:likes userId}} {:multi false}))
+
+(defn insert-follow [userId followedUserId]
+  (mc/update @db "users" { :_id (ObjectId. userId) } {$push {:follows followedUserId}} {:multi false}))
+
+(defn insert-block [userId blockedUserId]
+  (mc/update @db "users" { :_id (ObjectId. userId) } {$push {:blocks blockedUserId}} {:multi false}))
 
 (defn retrieve-tweets-by-user-id [userId]
   (def result (mc/find-maps @db "tweets" {:owner userId}))
@@ -52,18 +62,32 @@
           (insert-tweet userId content)
           (create-response status-forbidden forbidden-message)))
 
-(defn delete-tweet [tweetId]
-    (mc/remove-by-id @db "tweets" tweetId))
-
 (defn retrieve-tweet [bearer objectId]
   (def result (mc/find-one-as-map @db "tweets" { :_id (ObjectId. objectId) }))
   (if (= (unwrap-user-id bearer) (:owner result))
     (create-response status-ok (assoc result :_id (str (:_id result))))
     (create-response status-forbidden forbidden-message)))
 
-(defn like-tweet [bearerToken objectId]
-  ;;(mc/update-by-id db "tweets"  (ObjectId. objectId) {$push {:likes "überachievement"}} {:multi false})
-  )
+(defn like-tweet [bearerToken likedTweetId]
+  (def userId (unwrap-user-id bearerToken))
+  (def userResult (mc/find-one-as-map @db "users"  { :_id (ObjectId. userId) }))
+  (if (some? userResult)
+    (create-response status-ok (insert-like userId likedTweetId))
+    (create-response status-forbidden forbidden-message)))
+
+(defn follow-user [bearerToken followedUserId]
+  (def userId (unwrap-user-id bearerToken))
+  (def userResult (mc/find-one-as-map @db "users"  { :_id (ObjectId. userId) }))
+  (if (some? userResult)
+    (create-response status-ok (insert-follow userId followedUserId))
+    (create-response status-forbidden forbidden-message)))
+
+(defn block-user [bearerToken blockedUserId]
+  (def userId (unwrap-user-id bearerToken))
+  (def userResult (mc/find-one-as-map @db "users"  { :_id (ObjectId. userId) }))
+  (if (some? userResult)
+    (create-response status-ok (insert-block userId blockedUserId))
+    (create-response status-forbidden forbidden-message)))
 
 ;; user operations
 (defn create-user [userName userPassword]

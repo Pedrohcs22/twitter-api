@@ -16,10 +16,21 @@
         (let [username (get-in req [:body "username"])
               password (get-in req [:body "password"])]
           (create-user username password)))
+
   (GET "/rest/v1/user/:id/tweet" req
        (let [bearer (get-in req [:headers "authorization"])
              id (get-in req [:route-params :id])]
-         (retrieve-tweets-for-user bearer id))))
+         (retrieve-tweets-for-user bearer id)))
+
+  (PUT "/rest/v1/user/:followedUserId/follow" req
+       (let [bearer (get-in req [:headers "authorization"])
+             followedUserId (get-in req [:route-params :id])]
+         (follow-user bearer followedUserId)))
+
+  (PUT "/rest/v1/user/:bloquedUserId/block" req
+       (let [bearerToken (get-in req [:headers "authorization"])
+             bloquedUserId (get-in req [:route-params :id])]
+         (block-user bearerToken bloquedUserId))))
 
 (defroutes login-routes
   (POST "/rest/v1/login" req
