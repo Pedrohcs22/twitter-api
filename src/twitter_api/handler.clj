@@ -6,16 +6,20 @@
      [ring.util.response :refer [response]]
      [twitter-api.database :refer :all]))
 
+;; database-routes created only for development purposes - not suitable for production
+(defroutes database-routes
+  (POST "/rest/v1/database/clear" req
+        (drop-all)))
+
 (defroutes user-routes
   (POST "/rest/v1/user" req
         (let [username (get-in req [:body "username"])
               password (get-in req [:body "password"])]
           (create-user username password)))
-  (GET "/rest/v1/user/:id/tweet" [id]
-       {:status 200
-        :headers {}
-        :content-type "application/json; charset=UTF-8"
-        :body (retrieve-tweets-for-user id)}))
+  (GET "/rest/v1/user/:id/tweet" req
+       (let [bearer (get-in req [:headers "authorization"])
+             id (get-in req [:route-params :id])]
+         (retrieve-tweets-for-user bearer id))))
 
 (defroutes login-routes
   (POST "/rest/v1/login" req
@@ -24,17 +28,21 @@
           (login username password))))
 
 (defroutes tweet-routes
-  (GET "/rest/v1/tweet/:id" [id]
-       {:status 200
-        :headers {}
-        :content-type "application/json; charset=UTF-8"
-        :body (retrieve-tweet id)})
+  (GET "/rest/v1/tweet/:id" req
+       (let [bearer (get-in req [:headers "authorization"])
+             id (get-in req [:route-params :id])]
+         (retrieve-tweet bearer id)))
+
   (POST "/rest/v1/tweet" req
-        (let [owner (get-in req [:body "owner"])
-              content (get-in req [:body "content"])]
-          (create-tweet owner content)))
-  (PUT "/rest/v1/tweet/:id/like" [id]
-       (like-tweet id))
+        (let [content (get-in req [:body "content"])
+              bearer (get-in req [:headers "authorization"])]
+          (create-tweet bearer content)))
+
+  (PUT "/rest/v1/tweet/:id/like" req
+       (let [bearer (get-in req [:headers "authorization"])
+             id (get-in req [:route-params :id])]
+         (like-tweet bearer id)))
+
   (DELETE "/rest/v1/tweet/:id" [id]
           (response (delete-tweet (Integer/parseInt id)))))
 
@@ -42,6 +50,7 @@
   user-routes
   tweet-routes
   login-routes
+  database-routes
   (route/resources "/")
   (route/not-found "Not Found"))
 
